@@ -1,30 +1,62 @@
-# React + TypeScript + Vite
+# DnD Dice Roller
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+import { roll, rollD20 } from 'dnd-dice-roller
 
-Currently, two official plugins are available:
+# Design Notes
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```ts
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+private
+React App
 
-- Configure the top-level `parserOptions` property like this:
+rollDie(4)
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+
+
+diceroller.makeSavingThrow()
+
+const { log, makeAttackRoll } = useDiceRoll()
+
+log.getLastRoll()
+
+makeAttackRoll() = rollWithAdvantage() => 2 x rollDie(20) -> take the highest
+makeAttackRoll() = rollWithDisadvantage() => 2 x rollDie(20) -> take the lowest
+
+rollDie()
+roll(numberOfSides = 20) = rollDie(numberOfSides)
+rollD100() = rollDie(100)
+rollD20() = rollDie(20)
+rollD100() = rollDie(100)
+rollD100() = rollDie(100)
+
+
+
+const result = rollD20() // useDice(20)
+
+
+
+rollD20WithAdvantage({
+  modifiers: [
+    'd4', 1
+  ]
+})
+
+roll().plus(2)
+
+rollD20().withAdvantage().withD4().plus(3) // roll 2d20, take the heights, add a d4 and add 3.
+
+
+
+let value = 0;
+value += rollD20()
+value += plus(2)
+value += rollD6(3).plus(2) // roll 3d6, add up the results and add 2
+
+return value
+
+
+makeAttackRoll({ modifier: 4, advantage: true }).withD4().plus(3)
+
+
 ```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
