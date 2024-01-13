@@ -13,10 +13,6 @@
     "prettier": "^3.1.0",
     "turbo": "latest"
   },
-  "engines": {
-    "node": ">=18"
-  },
-  "packageManager": "npm@10.2.3",
   "workspaces": [
     "apps/*",
     "packages/*"
