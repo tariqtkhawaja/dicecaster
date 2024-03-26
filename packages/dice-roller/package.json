@@ -2,6 +2,7 @@
   "name": "@dicecaster/dice-roller",
   "version": "0.0.0",
   "private": true,
+  "license": "MIT",
   "main": "src/index.ts",
   "scripts": {
     "lint": "eslint . --max-warnings 0",
