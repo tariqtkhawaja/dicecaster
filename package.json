@@ -2,20 +2,24 @@
   "name": "dicecaster",
   "private": true,
   "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest --config=jest.config.js",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "@dicecaster/eslint-config": "*",
-    "@dicecaster/typescript-config": "*",
+    "jest": "^29.7.0",
     "prettier": "^3.1.0",
-    "turbo": "latest"
+    "ts-jest": "^29.1.2",
+    "typedoc": "^0.25.12"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  "dependencies": {
+    "@jest/globals": "^29.7.0"
+  }
 }

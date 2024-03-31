@@ -1,0 +1,1 @@
+export const sumModifiers = (modifiers: number[] = []) => modifiers.reduce((acc, modifier) => acc + modifier, 0)
