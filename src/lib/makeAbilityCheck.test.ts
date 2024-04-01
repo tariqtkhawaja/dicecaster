@@ -1,134 +1,71 @@
-import { describe, expect, it, jest } from "@jest/globals";
-import { makeAbilityCheck } from "./makeAbilityCheck";
-import { rollAbilityScore } from "./rollAbilityScore";
-import type { AbilityCheckConfig, CheckResult, MakeAbilityCheck } from "..";
+import { afterEach, describe, it, expect, jest } from '@jest/globals';
+import { makeAbilityCheck } from './makeAbilityCheck';
+import type { AbilityCheckConfig, CheckResult } from './rollAbilityScore';
 
-jest.mock('./rollAbilityScore');
+jest.mock('./rollD20', () => ({
+    rollD20: jest.fn(),
+}));
 
 describe('makeAbilityCheck', () => {
-    it('should return a CheckResult with correct properties', () => {
-        const abilityCheckConfig: AbilityCheckConfig = {
-            abilityScoreModifier: 2,
-            modifiers: []
-        };
-
-        const mockCheckResult: CheckResult = {
-            result: 15,
-            resultBeforeModifers: 13,
-            success: false,
-            abilityScoreModifier: 0
-        };
-
-        const result = makeAbilityCheck({ abilityCheckConfig, difficultyClass: 15, modifiers: [] });
-
-        expect(result).toHaveProperty('result');
-        expect(result).toHaveProperty('resultBeforeModifers');
-        expect(result).toHaveProperty('critical');
-        expect(result).toHaveProperty('failure');
-        expect(result).toHaveProperty('success');
+    afterEach(() => {
+        jest.resetAllMocks();
     });
-    it('should return a CheckResult with success set to true if the result is greater than or equal to the difficulty class', () => {
+
+    it('should return a CheckResult with the correct properties', () => {
         const abilityCheckConfig: AbilityCheckConfig = {
             abilityScoreModifier: 2,
-            modifiers: []
         };
+        const difficultyClass = 15;
 
-        const mockCheckResult: CheckResult = {
-            result: 15,
-            resultBeforeModifers: 13,
-            success: false,
-            abilityScoreModifier: 0
-        };
+        const mockRollD20 = require('./rollD20').rollD20;
+        mockRollD20.mockReturnValue(10);
 
-        const result = makeAbilityCheck({ abilityCheckConfig, difficultyClass: 15, modifiers: [] });
+        const result = makeAbilityCheck({ abilityCheckConfig, difficultyClass });
 
-        expect(result.success).toBe(true);
+        expect(result).toHaveProperty('abilityScoreModifier', 2);
+        expect(result).toHaveProperty('advantage', false);
+        expect(result).toHaveProperty('disadvantage', false);
+        expect(result).toHaveProperty('modifiers', []);
+        expect(result).toHaveProperty('result', 10);
+        expect(result).toHaveProperty('resultBeforeModifers', 10);
+        expect(result).toHaveProperty('critical', false);
+        expect(result).toHaveProperty('success', false);
+        expect(result).toHaveProperty('failure', true);
     });
-    it('should return a CheckResult with success set to false if the result is less than the difficulty class', () => {
+
+    it('should correctly determine success and failure', () => {
+        const mockRollD20 = require('./rollD20').rollD20;
         const abilityCheckConfig: AbilityCheckConfig = {
             abilityScoreModifier: 2,
-            modifiers: []
         };
+        const difficultyClass = 15;
 
-        const mockCheckResult: CheckResult = {
-            result: 15,
-            resultBeforeModifers: 13,
-            success: false,
-            abilityScoreModifier: 0
-        };
+        mockRollD20.mockReturnValueOnce(16);
+        const resultSuccess = makeAbilityCheck({ abilityCheckConfig, difficultyClass });
 
-        const result = makeAbilityCheck({ abilityCheckConfig, difficultyClass: 15, modifiers: [] });
+        mockRollD20.mockReturnValueOnce(12);
+        const resultFailure = makeAbilityCheck({ abilityCheckConfig, difficultyClass });
 
-        expect(result.success).toBe(true);
+        expect(resultSuccess.success).toBe(true);
+        expect(resultSuccess.failure).toBe(false);
+        expect(resultFailure.success).toBe(false);
+        expect(resultFailure.failure).toBe(true);
     });
-    it('should roll 2D20s and return the highest value when advantage is true', () => {
+
+    it('should correctly determine critical success and failure', () => {
         const abilityCheckConfig: AbilityCheckConfig = {
             abilityScoreModifier: 2,
-            modifiers: [],
-            advantage: true
         };
+        const difficultyClass = 15;
 
-        const mockCheckResult: CheckResult = {
-            result: 15,
-            resultBeforeModifers: 13,
-            success: false,
-            abilityScoreModifier: 0
-        };
+        const mockRollD20 = require('./rollD20').rollD20;
+        mockRollD20.mockReturnValueOnce(20);
+        const resultCriticalSuccess = makeAbilityCheck({ abilityCheckConfig, difficultyClass });
 
-        const result = makeAbilityCheck({ abilityCheckConfig, difficultyClass: 15, modifiers: [] });
+        mockRollD20.mockReturnValueOnce(1);
+        const resultCriticalFailure = makeAbilityCheck({ abilityCheckConfig, difficultyClass });
 
-        expect(result.success).toBe(true);
-    });
-    it('should roll 2D20s and return the lowest value when disadvantage is true', () => {
-        const abilityCheckConfig: AbilityCheckConfig = {
-            abilityScoreModifier: 2,
-            modifiers: [],
-            disadvantage: true
-        };
-
-        const mockCheckResult: CheckResult = {
-            result: 15,
-            resultBeforeModifers: 13,
-            success: false,
-            abilityScoreModifier: 0
-        };
-
-        const result = makeAbilityCheck({ abilityCheckConfig, difficultyClass: 15, modifiers: [] });
-
-        expect(result.success).toBe(true);
-    });
-    it('should return a CheckResult with critical set to true if the resultBeforeModifers is 1', () => {
-        const abilityCheckConfig: AbilityCheckConfig = {
-            abilityScoreModifier: 2,
-            modifiers: []
-        };
-
-        const mockCheckResult: CheckResult = {
-            result: 15,
-            resultBeforeModifers: 1,
-            success: false,
-            abilityScoreModifier: 0
-        };
-
-        const result = makeAbilityCheck({ abilityCheckConfig, difficultyClass: 15, modifiers: [] });
-
-        expect(result.critical).toBe(true);
-    });
-    it('should return a CheckResult with critical set to true if the resultBeforeModifers is 20', () => {
-        const abilityCheckConfig: AbilityCheckConfig = {
-            abilityScoreModifier: 2,
-            modifiers: []
-        };
-
-        const mockCheckResult: CheckResult = {
-            result: 15,
-            resultBeforeModifers: 20,
-            success: false,
-            abilityScoreModifier: 0
-        };
-
-        const result = makeAbilityCheck({ abilityCheckConfig, difficultyClass: 15, modifiers: [] });
-
-        expect(result.critical).toBe(true);
+        expect(resultCriticalSuccess.critical).toBe(true);
+        expect(resultCriticalFailure.critical).toBe(true);
     });
 });

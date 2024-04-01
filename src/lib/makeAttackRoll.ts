@@ -9,7 +9,13 @@ export interface MakeAttackRoll {
     attackRollConfig: AbilityCheckConfig;
     armorClass: number;
 }
-
+/**
+ * @function makeAttackRoll
+ * This function rolls a d20 and returns the result.W
+ * @param AbilityCheckConfig The configuration for the ability check.
+ * @param armorClass The armor class of the target.
+ * @returns A CheckResult object.
+ */
 export const makeAttackRoll = ({ attackRollConfig, armorClass }: MakeAttackRoll): CheckResult => {
     const check = rollAbilityScore(attackRollConfig)
     return {

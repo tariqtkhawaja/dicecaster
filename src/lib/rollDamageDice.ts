@@ -15,6 +15,14 @@ interface RollDamageDice {
     doubleDamage?: boolean;
     modifiers: number[]
 }
+/**
+ * @function rollDamageDice
+ * This function rolls a pool of dice and sums the results, then adds the modifiers.
+ * @param dice An array of DieConfig objects.
+ * @param doubleDamage A boolean value to determine if the damage is doubled.
+ * @param modifiers An array of numbers to be summed.
+ * @returns an object containing the total damage, original damage, modifiers and a boolean value to determine if the damage is doubled.
+ */
 
 export const rollDamageDice = ({ dice, doubleDamage = false, modifiers }: RollDamageDice): DamageResult => {
     const calaculateDamage = (accumulatedDamage: number, damage: number) => {

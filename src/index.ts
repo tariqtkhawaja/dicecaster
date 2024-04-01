@@ -7,4 +7,4 @@ export * from "./lib/rollDice";
 export * from "./lib/rollDicePool";
 export * from "./lib/sumModifiers";
 export * from "./lib/makeAbilityCheck"
-export * from "./lib/makeAttackRoll"
+export * from "./lib/makeAttackRoll";
