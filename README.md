@@ -1,16 +1,9 @@
-
-
 # Dicecaster
 
-- Roll DnD Dice
+Docs: [available here](tariqk26.github.io/dicecaster).
 
-- Roll 1D20
-- Roll 2D20 and take the highest
-- Roll 2D20 and take the lowest
+## Install
 
-- Roll XDamageDie and sum the results
-
-- Roll Dice
-- Roll DicePool
-
-All dice rolls can take a modifer
+```bash
+npm i dicecaster@latest`
+```
