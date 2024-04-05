@@ -6,6 +6,7 @@ interface DamageResult {
     damage: number;
     doubleDamage: boolean;
     modifiers: number[];
+    modifierTotal: number;
     originalDamage: number;
 }
 
@@ -33,12 +34,15 @@ export const rollDamageDice = ({ dice, doubleDamage = false, modifiers }: RollDa
         return total + results.reduce(calaculateDamage, 0)
     }, 0)
 
-    const modifiedDamage = (doubleDamage ? totalDamage * 2 : totalDamage) + sumModifiers(modifiers)
+    const modifierTotal = sumModifiers(modifiers)
+
+    const modifiedDamage = (doubleDamage ? totalDamage * 2 : totalDamage) + modifierTotal
 
     return {
         damage: modifiedDamage,
         originalDamage: totalDamage,
         modifiers,
+        modifierTotal,
         doubleDamage
     }
 }

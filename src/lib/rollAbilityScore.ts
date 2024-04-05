@@ -13,6 +13,7 @@ export interface CheckResult extends AbilityCheckConfig {
     critical?: boolean
     success?: boolean
     failure?: boolean
+    totalModifiers: number;
 }
 /**
  * @function rollAbilityScore
@@ -22,13 +23,16 @@ export interface CheckResult extends AbilityCheckConfig {
  */
 export const rollAbilityScore = ({ advantage = false, disadvantage = false, abilityScoreModifier, modifiers = [] }: AbilityCheckConfig): CheckResult => {
     const result = rollD20({ advantage, disadvantage })
+    const totalModifiers = sumModifiers(modifiers)
+
     return {
         abilityScoreModifier,
         advantage,
         disadvantage,
         modifiers,
+        totalModifiers,
         resultBeforeModifers: result,
-        result: result + sumModifiers(modifiers),
+        result: result + totalModifiers,
     }
 
 }

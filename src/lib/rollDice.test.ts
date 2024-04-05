@@ -1,5 +1,4 @@
 import type { DieType } from '../dice-roller.ts';
-import { describe, it, expect } from '@jest/globals';
 import { getNumberOfSides } from './rollDie';
 import { rollDice } from './rollDice';
 

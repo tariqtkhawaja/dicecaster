@@ -1,6 +1,5 @@
 import { getNumberOfSides, calculateRollResult, rollDie } from './rollDie';
 import type { DieType } from '../dice-roller.ts';
-import { describe, it, expect } from '@jest/globals';
 
 
 describe('getNumberOfSides', () => {
