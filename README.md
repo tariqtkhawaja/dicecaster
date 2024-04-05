@@ -11,5 +11,5 @@ at the following link:
 ## Install
 
 ```bash
-npm i dicecaster@latest`
+npm i dicecaster@latest
 ```

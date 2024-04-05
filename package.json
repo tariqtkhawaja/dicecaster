@@ -13,6 +13,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
+    "docs:build": "npx typedoc src",
+    "docs:dev": "npx typedoc src --watch",
     "prepublish": "npm run build",
     "test": "jest --config=jest.config.js",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
