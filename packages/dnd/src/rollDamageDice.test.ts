@@ -1,5 +1,5 @@
-import { rollDamageDice } from "..";
-import { DieConfig } from "../dice-roller";
+import { rollDamageDice } from "./rollDamageDice";
+import { DieConfig } from "@dicecaster/core";
 
 describe('rollDamageDice', () => {
     const dice: DieConfig[] = [

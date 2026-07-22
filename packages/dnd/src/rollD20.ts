@@ -1,4 +1,4 @@
-import { rollDie } from './rollDie';
+import { rollDie } from '@dicecaster/core';
 
 /**
  * @function rollD20

@@ -1,0 +1,20 @@
+{
+  "name": "dicecaster",
+  "version": "2.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Tariq Khawaja"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@dicecaster/core": "workspace:*"
+  },
+  "deprecated": "This package is deprecated. Use @dicecaster/core instead."
+}

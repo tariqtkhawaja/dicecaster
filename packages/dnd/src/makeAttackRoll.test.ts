@@ -1,8 +1,7 @@
 import { makeAttackRoll } from './makeAttackRoll';
-import { rollDice } from './rollDice';
 import { rollAbilityScore } from './rollAbilityScore';
 import type { AttackRollConfig, MakeAttackRoll } from './makeAttackRoll';
-import type { AbilityCheckConfig, CheckResult } from '..';
+import type { AbilityCheckConfig, CheckResult } from './rollAbilityScore';
 
 jest.mock('./rollAbilityScore');
 

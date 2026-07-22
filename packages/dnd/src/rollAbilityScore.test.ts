@@ -8,10 +8,11 @@ describe('rollAbilityScore', () => {
         expect(roll.result).toBeLessThanOrEqual(20);
     });
 
-    it('should return a number within the expected range when a ability score modifier is provided', () => {
+    it('should return a number within the expected range when an ability score modifier is provided', () => {
         const roll = rollAbilityScore({ abilityScoreModifier: 4, modifiers: [] });
-        expect(roll.result).toBeGreaterThanOrEqual(4);
-        expect(roll.result).toBeLessThanOrEqual(24);
+        expect(roll.result).toBeGreaterThanOrEqual(1);
+        expect(roll.result).toBeLessThanOrEqual(20);
+        expect(roll.abilityScoreModifier).toBe(4);
     });
 
     it('should return a number within the expected range when a modifier is provided', () => {
