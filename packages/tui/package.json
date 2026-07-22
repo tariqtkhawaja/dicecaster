@@ -1,0 +1,23 @@
+{
+  "name": "@dicecaster/tui",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "dicecaster-tui": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prototype": "tsx src/prototype.tsx",
+    "test": "echo 'no tests yet'"
+  },
+  "dependencies": {
+    "@dicecaster/core": "workspace:*",
+    "ink": "^6.0.0",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "tsx": "^4.0.0"
+  }
+}
