@@ -1,6 +1,4 @@
-import { rollDicePool } from './rollDicePool'
-import { sumModifiers } from './sumModifiers'
-import { DieConfig } from '../dice-roller'
+import { rollDicePool, sumModifiers, DieConfig } from '@dicecaster/core'
 
 interface DamageResult {
     damage: number;

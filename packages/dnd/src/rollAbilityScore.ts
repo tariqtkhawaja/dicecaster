@@ -1,5 +1,5 @@
 import { rollD20 } from './rollD20'
-import { sumModifiers } from './sumModifiers'
+import { sumModifiers } from '@dicecaster/core'
 
 export interface AbilityCheckConfig {
     abilityScoreModifier: number;

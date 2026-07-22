@@ -1,6 +1,7 @@
 import { rollD20 } from './rollD20';
 
-jest.mock('./rollDie', () => ({
+jest.mock('@dicecaster/core', () => ({
+    ...jest.requireActual('@dicecaster/core'),
     rollDie: jest.fn().mockReturnValue(10),
 }));
 
@@ -16,7 +17,7 @@ describe('rollD20', () => {
         expect(result).toBeLessThanOrEqual(20);
     });
     it(`should roll 2d20's and return the highest value`, () => {
-        const mockRollDie = require('./rollDie').rollDie;
+        const mockRollDie = require('@dicecaster/core').rollDie;
         mockRollDie.mockReturnValueOnce(20);
         mockRollDie.mockReturnValueOnce(1);
 
@@ -24,7 +25,7 @@ describe('rollD20', () => {
         expect(result).toBe(20);
     });
     it(`should roll 2d20's and return the lowest value`, () => {
-        const mockRollDie = require('./rollDie').rollDie;
+        const mockRollDie = require('@dicecaster/core').rollDie;
         mockRollDie.mockReturnValueOnce(20);
         mockRollDie.mockReturnValueOnce(1);
 
@@ -32,7 +33,7 @@ describe('rollD20', () => {
         expect(result).toBe(1);
     });
     it(`should return a number within the expected range when both advantage and disadvantage are true`, () => {
-        const mockRollDie = require('./rollDie').rollDie;
+        const mockRollDie = require('@dicecaster/core').rollDie;
         mockRollDie.mockReturnValueOnce(20);
         mockRollDie.mockReturnValueOnce(1);
 
