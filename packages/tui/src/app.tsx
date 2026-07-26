@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { Box, Text, useInput, type Key } from 'ink';
 import { useApp } from 'ink';
-import { DieButtons, DIE_TYPES, Spinner, RollExpression, ResultDisplay, RollButton } from './components/index.js';
+import { DieButtons, DIE_TYPES, Spinner, RollExpression, ResultDisplay, RollButton, HistoryPanel } from './components/index.js';
 import { RollProvider, useRoll } from './RollContext.js';
 
 type FocusArea = 'die-grid' | 'count-spinner' | 'modifier-spinner';
 
-function Controls() {
+function LeftPanel() {
   const { exit } = useApp();
   const { dieType, count, modifier, setDieType, setCount, setModifier, expression, lastResult, executeRoll } = useRoll();
   const [focusArea, setFocusArea] = useState<FocusArea>('die-grid');
@@ -61,7 +61,7 @@ function Controls() {
   useInput(handleInput);
 
   return (
-    <Box flexDirection="column">
+    <Box flexDirection="column" width="60%">
       <Box marginBottom={1}>
         <DieButtons selectedIndex={selectedDieIndex} />
       </Box>
@@ -80,13 +80,23 @@ function Controls() {
   );
 }
 
+function RightPanel() {
+  const { history } = useRoll();
+  return (
+    <Box flexDirection="column" width="40%" borderStyle="single" borderColor="gray">
+      <HistoryPanel entries={history} />
+    </Box>
+  );
+}
+
 export function App() {
   return (
     <RollProvider>
       <Box flexDirection="column" padding={1}>
         <Text bold>Dicecaster</Text>
-        <Box marginTop={1}>
-          <Controls />
+        <Box flexDirection="row" marginTop={1}>
+          <LeftPanel />
+          <RightPanel />
         </Box>
       </Box>
     </RollProvider>
