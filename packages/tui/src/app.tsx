@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Box, Text, useInput, type Key } from 'ink';
 import { useApp } from 'ink';
-import { DieButtons, DIE_TYPES, Spinner, RollExpression, ResultDisplay } from './components/index.js';
+import { DieButtons, DIE_TYPES, Spinner, RollExpression, ResultDisplay, RollButton } from './components/index.js';
 import { RollProvider, useRoll } from './RollContext.js';
 
 type FocusArea = 'die-grid' | 'count-spinner' | 'modifier-spinner';
@@ -72,6 +72,7 @@ function Controls() {
       <Box marginTop={1}>
         <RollExpression expression={expression} />
       </Box>
+      <RollButton focused={false} />
       <Box marginTop={1}>
         <ResultDisplay result={lastResult} />
       </Box>
