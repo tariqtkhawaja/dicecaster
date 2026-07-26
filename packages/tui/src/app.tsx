@@ -1,14 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import { Box, Text, useInput, type Key } from 'ink';
 import { useApp } from 'ink';
-import { DieButtons, DIE_TYPES, Spinner, RollExpression } from './components/index.js';
+import { DieButtons, DIE_TYPES, Spinner, RollExpression, ResultDisplay } from './components/index.js';
 import { RollProvider, useRoll } from './RollContext.js';
 
 type FocusArea = 'die-grid' | 'count-spinner' | 'modifier-spinner';
 
 function Controls() {
   const { exit } = useApp();
-  const { dieType, count, modifier, setDieType, setCount, setModifier, expression } = useRoll();
+  const { dieType, count, modifier, setDieType, setCount, setModifier, expression, lastResult, executeRoll } = useRoll();
   const [focusArea, setFocusArea] = useState<FocusArea>('die-grid');
   const [selectedDieIndex, setSelectedDieIndex] = useState(0);
 
@@ -16,6 +16,11 @@ function Controls() {
     (_input: string, key: Key) => {
       if (key.escape) {
         exit();
+        return;
+      }
+
+      if (key.return || _input === ' ') {
+        executeRoll();
         return;
       }
 
@@ -50,7 +55,7 @@ function Controls() {
         }
       }
     },
-    [focusArea, selectedDieIndex, count, modifier, exit, setDieType, setCount, setModifier]
+    [focusArea, selectedDieIndex, count, modifier, exit, setDieType, setCount, setModifier, executeRoll]
   );
 
   useInput(handleInput);
@@ -66,6 +71,9 @@ function Controls() {
       </Box>
       <Box marginTop={1}>
         <RollExpression expression={expression} />
+      </Box>
+      <Box marginTop={1}>
+        <ResultDisplay result={lastResult} />
       </Box>
     </Box>
   );
