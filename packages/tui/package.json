@@ -1,7 +1,11 @@
 {
   "name": "@dicecaster/tui",
-  "version": "0.0.1",
-  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Tariq Khawaja"
+  },
+  "description": "Terminal UI for dicecaster — Ink-based split-panel dice roller with cascade animation and persistent history",
   "type": "module",
   "bin": {
     "dicecaster-tui": "./dist/cli.js"
@@ -17,7 +21,7 @@
   "dependencies": {
     "@dicecaster/core": "workspace:*",
     "ink": "^6.0.0",
-    "react": "^19.0.0"
+    "ink-scroll-view": "^0.3.7"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
@@ -26,5 +30,8 @@
     "ts-jest": "^29.4.12",
     "tsx": "^4.0.0",
     "typescript": "^5.9.3"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
   }
 }
