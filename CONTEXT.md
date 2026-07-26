@@ -6,6 +6,7 @@ A game-agnostic dice rolling library with a keep-highest/keep-lowest strategy, e
 
 - **@dicecaster/core** — game-agnostic dice rolling primitives
 - **@dicecaster/dnd** — D&D 5e rules built on top of core
+- **@dicecaster/tui** — Ink-based terminal UI for single-group rolls (NdX+M)
 - **dicecaster** — deprecated shim re-exporting @dicecaster/core
 
 Game-specific terminology belongs in each package's own documentation, not here. This glossary covers only concepts shared across the core library.
