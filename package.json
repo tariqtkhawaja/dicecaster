@@ -12,7 +12,7 @@
     "test": "pnpm -r test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky",
-    "publish-all": "pnpm build && pnpm publish -r --access public --no-git-checks"
+    "publish-all": "pnpm build && pnpm --filter @dicecaster/core --filter @dicecaster/tui publish --access public --no-git-checks"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
