@@ -47,10 +47,19 @@ export function loadHistory(): HistoryFile {
 
 export function saveHistory(history: HistoryFile): void {
   const tmpFile = HISTORY_FILE + '.tmp';
-  fs.mkdirSync(HISTORY_DIR, { recursive: true });
+  try {
+    fs.mkdirSync(HISTORY_DIR, { recursive: true });
+  } catch {
+    // Directory may have been removed concurrently; skip silently
+    return;
+  }
   const serialized = JSON.stringify(history, null, 2);
-  fs.writeFileSync(tmpFile, serialized, 'utf-8');
-  fs.renameSync(tmpFile, HISTORY_FILE);
+  try {
+    fs.writeFileSync(tmpFile, serialized, 'utf-8');
+    fs.renameSync(tmpFile, HISTORY_FILE);
+  } catch {
+    // Concurrent cleanup may have removed the target; accept the loss
+  }
 }
 
 export function appendEntry(
