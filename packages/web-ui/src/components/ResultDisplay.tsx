@@ -1,18 +1,22 @@
 import { useRollResult } from '@dicecaster/react';
 
-export function ResultDisplay() {
+interface ResultDisplayProps {
+  className?: string;
+}
+
+export function ResultDisplay({ className }: ResultDisplayProps) {
   const { lastResult, animation } = useRollResult();
 
   if (!lastResult) {
     return (
-      <div className="text-gray-500 text-center py-8">
+      <div className={`text-gray-500 text-center py-8 ${className ?? ''}`.trim()}>
         Press Roll to start
       </div>
     );
   }
 
   return (
-    <div className="space-y-2">
+    <div className={`space-y-2 ${className ?? ''}`.trim()}>
       <div>
         <span className="text-gray-400">Dice: </span>
         <span className="font-bold">

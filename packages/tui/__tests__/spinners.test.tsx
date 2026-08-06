@@ -1,13 +1,13 @@
 import React from 'react';
 import { render } from 'ink-testing-library';
-import { RollProvider, useRoll } from '../src/RollContext.js';
+import { RollProvider, useRollConfig } from '@dicecaster/react';
 import { Spinner } from '../src/components/Spinner.js';
 import { RollExpression } from '../src/components/RollExpression.js';
 
 describe('RollContext', () => {
   it('provides default roll state', () => {
     function Consumer() {
-      const { dieType, count, modifier, expression } = useRoll();
+      const { dieType, count, modifier, expression } = useRollConfig();
       return (
         <div>
           <span>{dieType}</span>
@@ -29,7 +29,7 @@ describe('RollContext', () => {
 
   it('shows default count of 1', () => {
     function Consumer() {
-      const { count } = useRoll();
+      const { count } = useRollConfig();
       return <span>{count}</span>;
     }
 

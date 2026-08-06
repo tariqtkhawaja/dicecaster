@@ -1,11 +1,15 @@
 import { useRollConfig, useRollResult } from '@dicecaster/react';
 
-export function DiceRoller() {
+interface DiceRollerProps {
+  className?: string;
+}
+
+export function DiceRoller({ className }: DiceRollerProps) {
   const config = useRollConfig();
   const result = useRollResult();
 
   return (
-    <div className="space-y-4">
+    <div className={`space-y-4 ${className ?? ''}`.trim()}>
       <div className="flex flex-wrap gap-2">
         {config.DIE_TYPES.map((die) => (
           <button

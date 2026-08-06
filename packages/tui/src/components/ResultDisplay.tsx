@@ -46,12 +46,12 @@ export function ResultDisplay() {
   );
 }
 
-// Legacy wrapper for backward compatibility with existing tests
-interface ResultDisplayLegacyProps {
+// Standalone rendering helper for unit tests (no context dependency)
+interface ResultDisplayStandaloneProps {
   result: { expression: string; dieValues: number[]; modifier: number; total: number } | null;
 }
 
-export function ResultDisplayLegacy({ result }: ResultDisplayLegacyProps) {
+export function ResultDisplayStandalone({ result }: ResultDisplayStandaloneProps) {
   if (!result) {
     return (
       <Box flexDirection="column" minHeight={3}>

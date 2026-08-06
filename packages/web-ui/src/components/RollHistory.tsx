@@ -1,11 +1,15 @@
 import { useRollHistory } from '@dicecaster/react';
 
-export function RollHistory() {
+interface RollHistoryProps {
+  className?: string;
+}
+
+export function RollHistory({ className }: RollHistoryProps) {
   const history = useRollHistory();
 
   if (history.entries.length === 0) {
     return (
-      <div className="bg-gray-800 rounded-lg p-4">
+      <div className={`bg-gray-800 rounded-lg p-4 ${className ?? ''}`.trim()}>
         <h2 className="font-bold text-gray-400 mb-2">History</h2>
         <p className="text-gray-500">No rolls yet</p>
       </div>
@@ -13,16 +17,8 @@ export function RollHistory() {
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4 max-h-[600px] overflow-y-auto">
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="font-bold text-gray-400">History</h2>
-        <button
-          onClick={history.clear}
-          className="text-sm text-red-400 hover:text-red-300"
-        >
-          Clear
-        </button>
-      </div>
+    <div className={`bg-gray-800 rounded-lg p-4 max-h-[600px] overflow-y-auto ${className ?? ''}`.trim()}>
+      <h2 className="font-bold text-gray-400 mb-2">History</h2>
       <div className="space-y-2">
         {history.entries.map((entry) => (
           <div key={entry.id} className="border-b border-gray-700 pb-2">

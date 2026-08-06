@@ -34,8 +34,8 @@ function LeftPanel() {
         } else if (key.rightArrow) {
           const next = Math.min(config.DIE_TYPES.length - 1, selectedDieIndex + 1);
           setSelectedDieIndex(next);
-          const nextDie = config.DIE_TYPES[next];
-          if (nextDie) config.setDieType(nextDie);
+          const nextDieType = config.DIE_TYPES[next];
+          if (nextDieType) config.setDieType(nextDieType);
         } else if (key.downArrow || key.tab) {
           setFocusArea('count-spinner');
         }

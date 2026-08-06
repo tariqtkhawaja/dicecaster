@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect, useRef, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, useRef, type ReactNode } from 'react';
 import { rollDice, getNumberOfSides } from '@dicecaster/core';
 import type {
   DieType,
@@ -83,6 +83,9 @@ export function RollProvider({
   const [lastResult, setLastResult] = useState<RollResult | null>(null);
   const [animation, setAnimation] = useState<AnimationState>(defaultAnimation);
 
+  // Track active settle timer so a new roll cancels the previous one
+  const settleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // History state
   const [historyEntries, setHistoryEntries] = useState<HistoryEntry[]>(() => {
     if (historyAdapter) {
@@ -101,6 +104,11 @@ export function RollProvider({
   );
 
   const executeRoll = useCallback(() => {
+    // Cancel any pending settle timer from a previous roll
+    if (settleTimerRef.current !== null) {
+      clearTimeout(settleTimerRef.current);
+    }
+
     const sides = getNumberOfSides(dieType);
     const dieValues = rollDice(dieType, count);
     const total = dieValues.reduce((sum, v) => sum + v, 0) + modifier;
@@ -126,11 +134,12 @@ export function RollProvider({
 
     // Auto-settle after delay (2000ms base + 150ms per die beyond first)
     const settleDelay = 2000 + (count - 1) * 150;
-    const timerId = setTimeout(() => {
+    settleTimerRef.current = setTimeout(() => {
       setAnimation(prev => prev.startedAt === startedAt
         ? { ...prev, phase: "settled" }
         : prev
       );
+      settleTimerRef.current = null;
     }, settleDelay);
 
     // Append to history
@@ -151,8 +160,6 @@ export function RollProvider({
       persistHistory(updated);
       return updated;
     });
-
-    return () => clearTimeout(timerId);
   }, [dieType, count, modifier, expression, maxHistory, persistHistory]);
 
   const clearHistory = useCallback(() => {

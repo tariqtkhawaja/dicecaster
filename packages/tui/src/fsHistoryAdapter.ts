@@ -1,11 +1,9 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { randomUUID } from 'node:crypto';
 import type { HistoryAdapter, HistoryEntry } from '@dicecaster/react';
 
 const HISTORY_DIR = path.join(process.env.HOME ?? '.', '.dicecaster');
 const HISTORY_FILE = path.join(HISTORY_DIR, 'history.json');
-const MAX_ENTRIES = 100;
 
 function safeRead(): HistoryEntry[] {
   try {
@@ -40,36 +38,5 @@ function safeWrite(entries: HistoryEntry[]): void {
 
 export const fsHistoryAdapter: HistoryAdapter = {
   load: () => safeRead(),
-  save: (entries) => safeWrite(entries.slice(0, MAX_ENTRIES)),
+  save: (entries) => safeWrite(entries),
 };
-
-// Legacy exports for existing tests
-export interface HistoryFile {
-  version: 1;
-  entries: HistoryEntry[];
-}
-
-export function loadHistory(): HistoryFile {
-  return { version: 1, entries: safeRead() };
-}
-
-export function saveHistory(history: HistoryFile): void {
-  safeWrite(history.entries);
-}
-
-export function appendEntry(
-  entry: Omit<HistoryEntry, 'id' | 'timestamp'> & { partial?: boolean }
-): HistoryFile {
-  const history = loadHistory();
-  const newEntry: HistoryEntry = {
-    id: randomUUID(),
-    timestamp: new Date().toISOString(),
-    ...entry,
-  };
-  history.entries.unshift(newEntry);
-  while (history.entries.length > MAX_ENTRIES) {
-    history.entries.pop();
-  }
-  saveHistory(history);
-  return history;
-}
