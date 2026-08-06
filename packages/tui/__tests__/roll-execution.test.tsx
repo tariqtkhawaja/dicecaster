@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'ink-testing-library';
 import { rollDice } from '@dicecaster/core';
 import { RollProvider, useRoll } from '../src/RollContext.js';
-import { ResultDisplay } from '../src/components/ResultDisplay.js';
+import { ResultDisplayLegacy as ResultDisplay } from '../src/components/ResultDisplay.js';
 
 describe('executeRoll', () => {
   it('produces correct total from rollDice results', () => {

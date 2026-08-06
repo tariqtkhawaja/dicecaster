@@ -1,14 +1,18 @@
 import React, { useState, useCallback } from 'react';
 import { Box, Text, useInput, type Key } from 'ink';
 import { useApp } from 'ink';
-import { DieButtons, DIE_TYPES, Spinner, RollExpression, ResultDisplay, RollButton, HistoryPanel } from './components/index.js';
-import { RollProvider, useRoll } from './RollContext.js';
+import { RollProvider, useRollConfig, useRollResult, useRollHistory } from '@dicecaster/react';
+import { DieButtons, DIE_TYPES, Spinner, RollExpression, RollButton } from './components/index.js';
+import { ResultDisplay } from './components/ResultDisplay.js';
+import { HistoryPanel } from './components/HistoryPanel.js';
+import { fsHistoryAdapter } from './fsHistoryAdapter.js';
 
 type FocusArea = 'die-grid' | 'count-spinner' | 'modifier-spinner';
 
 function LeftPanel() {
   const { exit } = useApp();
-  const { dieType, count, modifier, setDieType, setCount, setModifier, expression, lastResult, executeRoll } = useRoll();
+  const config = useRollConfig();
+  const result = useRollResult();
   const [focusArea, setFocusArea] = useState<FocusArea>('die-grid');
   const [selectedDieIndex, setSelectedDieIndex] = useState(0);
 
@@ -20,7 +24,7 @@ function LeftPanel() {
       }
 
       if (key.return || _input === ' ') {
-        executeRoll();
+        result.executeRoll();
         return;
       }
 
@@ -28,18 +32,18 @@ function LeftPanel() {
         if (key.leftArrow) {
           setSelectedDieIndex((i) => Math.max(0, i - 1));
         } else if (key.rightArrow) {
-          const next = Math.min(DIE_TYPES.length - 1, selectedDieIndex + 1);
+          const next = Math.min(config.DIE_TYPES.length - 1, selectedDieIndex + 1);
           setSelectedDieIndex(next);
-          const nextDie = DIE_TYPES[next];
-          if (nextDie) setDieType(nextDie);
+          const nextDie = config.DIE_TYPES[next];
+          if (nextDie) config.setDieType(nextDie);
         } else if (key.downArrow || key.tab) {
           setFocusArea('count-spinner');
         }
       } else if (focusArea === 'count-spinner') {
         if (key.upArrow) {
-          setCount(count + 1);
+          config.setCount(config.count + 1);
         } else if (key.downArrow) {
-          setCount(count - 1);
+          config.setCount(config.count - 1);
         } else if (key.leftArrow) {
           setFocusArea('die-grid');
         } else if (key.rightArrow || key.tab) {
@@ -47,15 +51,15 @@ function LeftPanel() {
         }
       } else if (focusArea === 'modifier-spinner') {
         if (key.upArrow) {
-          setModifier(modifier + 1);
+          config.setModifier(config.modifier + 1);
         } else if (key.downArrow) {
-          setModifier(modifier - 1);
+          config.setModifier(config.modifier - 1);
         } else if (key.leftArrow || key.tab) {
           setFocusArea('count-spinner');
         }
       }
     },
-    [focusArea, selectedDieIndex, count, modifier, exit, setDieType, setCount, setModifier, executeRoll]
+    [focusArea, selectedDieIndex, config, result.executeRoll, exit]
   );
 
   useInput(handleInput);
@@ -66,32 +70,32 @@ function LeftPanel() {
         <DieButtons selectedIndex={selectedDieIndex} />
       </Box>
       <Box flexDirection="row" gap={2}>
-        <Spinner label="Count:" value={count} focused={focusArea === 'count-spinner'} />
-        <Spinner label="Mod:" value={modifier} focused={focusArea === 'modifier-spinner'} />
+        <Spinner label="Count:" value={config.count} focused={focusArea === 'count-spinner'} />
+        <Spinner label="Mod:" value={config.modifier} focused={focusArea === 'modifier-spinner'} />
       </Box>
       <Box marginTop={1}>
-        <RollExpression expression={expression} />
+        <RollExpression expression={config.expression} />
       </Box>
       <RollButton focused={false} />
       <Box marginTop={1}>
-        <ResultDisplay result={lastResult} />
+        <ResultDisplay />
       </Box>
     </Box>
   );
 }
 
 function RightPanel() {
-  const { history } = useRoll();
+  const history = useRollHistory();
   return (
     <Box flexDirection="column" width="40%" borderStyle="single" borderColor="gray">
-      <HistoryPanel entries={history} />
+      <HistoryPanel entries={history.entries} />
     </Box>
   );
 }
 
 export function App() {
   return (
-    <RollProvider>
+    <RollProvider historyAdapter={fsHistoryAdapter}>
       <Box flexDirection="column" padding={1}>
         <Text bold>Dicecaster</Text>
         <Box flexDirection="row" marginTop={1}>
