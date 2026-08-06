@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'ink-testing-library';
-import { ResultDisplay } from '../src/components/ResultDisplay.js';
+import { ResultDisplayStandalone as ResultDisplay } from '../src/components/ResultDisplay.js';
 
 describe('ResultDisplay animation', () => {
   it('shows placeholder when no result', () => {

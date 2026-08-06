@@ -1,0 +1,32 @@
+{
+  "name": "@dicecaster/react",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Tariq Khawaja"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest --config=jest.config.js"
+  },
+  "dependencies": {
+    "@dicecaster/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^30.4.1",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.8.3"
+  }
+}

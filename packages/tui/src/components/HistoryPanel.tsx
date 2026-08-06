@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Text } from 'ink';
 import { ScrollView } from 'ink-scroll-view';
-import type { HistoryEntry } from '../history.js';
+import type { HistoryEntry } from '@dicecaster/react';
 
 interface HistoryPanelProps {
   entries: HistoryEntry[];
