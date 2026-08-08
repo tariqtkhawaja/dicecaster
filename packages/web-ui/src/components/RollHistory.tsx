@@ -17,9 +17,9 @@ export function RollHistory({ className }: RollHistoryProps) {
   }
 
   return (
-    <div className={`bg-gray-800 rounded-lg p-4 max-h-[600px] overflow-y-auto ${className ?? ''}`.trim()}>
-      <h2 className="font-bold text-gray-400 mb-2">History</h2>
-      <div className="space-y-2">
+    <div className={`bg-gray-800 rounded-lg p-4 flex flex-col overflow-hidden ${className ?? ''}`.trim()}>
+      <h2 className="font-bold text-gray-400 mb-2 flex-shrink-0">History</h2>
+      <div className="space-y-2 overflow-y-auto flex-1 min-h-0 pr-1">
         {history.entries.map((entry) => (
           <div key={entry.id} className="border-b border-gray-700 pb-2">
             <div className="flex justify-between">

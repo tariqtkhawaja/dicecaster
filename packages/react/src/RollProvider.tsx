@@ -35,6 +35,9 @@ interface RollResultContextValue {
   lastResult: RollResult | null;
   animation: AnimationState;
   executeRoll: () => void;
+  requestSettle: () => void;
+  registerSceneReady: () => void;
+  unregisterSceneReady: () => void;
 }
 
 interface RollHistoryContextValue {
@@ -86,6 +89,17 @@ export function RollProvider({
   // Track active settle timer so a new roll cancels the previous one
   const settleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Scene-ready guard: 3D scene signals when mounted; settle timer waits for it
+  const sceneReadyRef = useRef(false);
+
+  const registerSceneReady = useCallback(() => {
+    sceneReadyRef.current = true;
+  }, []);
+
+  const unregisterSceneReady = useCallback(() => {
+    sceneReadyRef.current = false;
+  }, []);
+
   // History state
   const [historyEntries, setHistoryEntries] = useState<HistoryEntry[]>(() => {
     if (historyAdapter) {
@@ -102,6 +116,29 @@ export function RollProvider({
     },
     [historyAdapter],
   );
+
+  // Current roll's startedAt timestamp (ref so callbacks can read it without deps)
+  const currentStartedAtRef = useRef<number | null>(null);
+
+  // Perform the settle transition
+  const doSettle = useCallback(() => {
+    const ts = currentStartedAtRef.current;
+    setAnimation(prev => prev.startedAt === ts
+      ? { ...prev, phase: "settled" }
+      : prev
+    );
+    settleTimerRef.current = null;
+    sceneReadyRef.current = false;
+  }, []);
+
+  // Request immediate settle (called by 3D scene when all dice sleep)
+  const requestSettle = useCallback(() => {
+    if (settleTimerRef.current !== null) {
+      clearTimeout(settleTimerRef.current);
+      settleTimerRef.current = null;
+    }
+    doSettle();
+  }, [doSettle]);
 
   const executeRoll = useCallback(() => {
     // Cancel any pending settle timer from a previous roll
@@ -125,6 +162,7 @@ export function RollProvider({
 
     // Start rolling animation
     const startedAt = Date.now();
+    currentStartedAtRef.current = startedAt;
     setAnimation({
       phase: "rolling",
       dieValues,
@@ -132,15 +170,35 @@ export function RollProvider({
       startedAt,
     });
 
-    // Auto-settle after delay (2000ms base + 150ms per die beyond first)
+    // Auto-settle after delay, but only once the 3D scene signals ready
     const settleDelay = 2000 + (count - 1) * 150;
-    settleTimerRef.current = setTimeout(() => {
-      setAnimation(prev => prev.startedAt === startedAt
-        ? { ...prev, phase: "settled" }
-        : prev
-      );
-      settleTimerRef.current = null;
-    }, settleDelay);
+    const startSettleTimer = () => {
+      settleTimerRef.current = setTimeout(doSettle, settleDelay);
+    };
+
+    if (sceneReadyRef.current) {
+      startSettleTimer();
+    } else {
+      // Poll for scene readiness, then start timer
+      const pollInterval = setInterval(() => {
+        if (sceneReadyRef.current) {
+          clearInterval(pollInterval);
+          startSettleTimer();
+        }
+      }, 50);
+      // Grace period: if no scene registers within 1s, assume no 3D scene and start timer anyway
+      const graceTimeout = setTimeout(() => {
+        clearInterval(pollInterval);
+        if (!sceneReadyRef.current) {
+          startSettleTimer();
+        }
+      }, 1000);
+      // Ultimate cleanup
+      setTimeout(() => {
+        clearInterval(pollInterval);
+        clearTimeout(graceTimeout);
+      }, settleDelay + 3000);
+    }
 
     // Append to history
     const entry: HistoryEntry = {
@@ -160,7 +218,7 @@ export function RollProvider({
       persistHistory(updated);
       return updated;
     });
-  }, [dieType, count, modifier, expression, maxHistory, persistHistory]);
+  }, [dieType, count, modifier, expression, maxHistory, persistHistory, doSettle]);
 
   const clearHistory = useCallback(() => {
     setHistoryEntries([]);
@@ -169,7 +227,7 @@ export function RollProvider({
 
   return (
     <RollConfigContext.Provider value={{ dieType, count, modifier, setDieType, setCount, setModifier, expression, DIE_TYPES }}>
-      <RollResultContext.Provider value={{ lastResult, animation, executeRoll }}>
+      <RollResultContext.Provider value={{ lastResult, animation, executeRoll, requestSettle, registerSceneReady, unregisterSceneReady }}>
         <RollHistoryContext.Provider value={{ entries: historyEntries, maxEntries: maxHistory, clear: clearHistory }}>
           {children}
         </RollHistoryContext.Provider>

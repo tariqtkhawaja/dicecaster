@@ -196,8 +196,8 @@ describe('useRollResult', () => {
       act(() => { utils.getByText('roll').click(); });
       expect(utils.getByTestId('phase').textContent).toBe('rolling');
 
-      // Advance past settle delay (2000ms base + 0 extra for 1 die)
-      act(() => { jest.advanceTimersByTime(2100); });
+      // Advance past grace period (1s) + settle delay (2000ms base + 0 extra for 1 die)
+      act(() => { jest.advanceTimersByTime(3100); });
       expect(utils.getByTestId('phase').textContent).toBe('settled');
     } finally {
       jest.useRealTimers();
